@@ -2,6 +2,7 @@
   "name": "cooking-ninja",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://venuyeggadi.github.io/cooking-ninja-react/",
   "dependencies": {
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
