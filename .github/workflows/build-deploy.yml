@@ -8,6 +8,9 @@ on:
     branches:
       - main
 
+env:
+  HOST: https://my-json-server.typicode.com/venuyeggadi/cooking-ninja-react/
+
 jobs:
   build:
     name: Build
