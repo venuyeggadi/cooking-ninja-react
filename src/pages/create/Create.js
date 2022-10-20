@@ -26,10 +26,13 @@ export default function Create() {
 
   // Redirect user when post request is completed.
   useEffect(() => {
+    if (error) {
+      console.log(error);
+    }
     if (data) {
       history.push('/')
     }
-  }, [data])
+  }, [data, error, history])
 
   const handleAdd = (e) => {
     e.preventDefault()
