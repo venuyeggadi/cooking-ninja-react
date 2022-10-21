@@ -22,25 +22,25 @@ const Search = () => {
   useEffect(() => {
     setIsPending(true);
 
-    projectFirestore.collection('recipes').where('title', '>=', query).where('title', '<=', query + "\uf8ff").get()
-      .then((snapshot) => {
-        if (snapshot.empty) {
-          setError('No recipes found!')
-          setIsPending(false);
-        } else {
-          let results = [];
-          snapshot.docs.forEach((doc) => {
-            results.push({ id: doc.id, ...doc.data() });
-          })
-          setData(results);
-          setIsPending(false);
-          setError(null);
-        }
-      })
-      .catch(err => {
-        setError(err.message);
+    const unsubscribe = projectFirestore.collection('recipes').where('title', '>=', query).where('title', '<=', query + "\uf8ff").onSnapshot((snapshot) => {
+      if (snapshot.empty) {
+        setError('No recipes found!')
         setIsPending(false);
-      });
+      } else {
+        let results = [];
+        snapshot.docs.forEach((doc) => {
+          results.push({ id: doc.id, ...doc.data() });
+        })
+        setData(results);
+        setIsPending(false);
+        setError(null);
+      }
+    }, (err) => {
+      setError(err.message);
+      setIsPending(false);
+    });
+
+    return () => unsubscribe()
 
   }, [query])
 
