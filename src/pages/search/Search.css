@@ -3,3 +3,7 @@
 .search.dark div {
   color: #e4e4e4;
 }
+
+.search .delete {
+  display: none;
+}

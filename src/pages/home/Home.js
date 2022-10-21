@@ -14,25 +14,25 @@ const Home = () => {
 
   useEffect(() => {
     setIsPending(true);
-
-    projectFirestore.collection('recipes').get()
-      .then((snapshot) => {
-        if (snapshot.empty) {
-          setError('No recipes found!')
-          setIsPending(false);
-        } else {
-          let results = [];
-          snapshot.docs.forEach((doc) => {
-            results.push({id: doc.id, ...doc.data()});
-          })
-          setData(results);
-          setIsPending(false);
-        }
-      })
-      .catch(err => {
-        setError(err.message);
+    const unsubscribe = projectFirestore.collection('recipes').onSnapshot((snapshot) => {
+      if (snapshot.empty) {
+        setError('No recipes found!')
         setIsPending(false);
-      });
+      } else {
+        let results = [];
+        snapshot.docs.forEach((doc) => {
+          results.push({id: doc.id, ...doc.data()});
+        })
+        setData(results);
+        setIsPending(false);
+      }
+    }, (err) => {
+      setError(err.message);
+      setIsPending(false);
+    });
+
+    // clean up function to unsubscribe from updates - executed when component unmounts
+    return () => unsubscribe();
 
   }, [])
 
