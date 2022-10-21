@@ -1,5 +1,5 @@
-import useFetch from '../../hooks/useFetch';
-import { hostUrl } from '../../env-config';
+import { useEffect, useState } from 'react';
+import { projectFirestore } from '../../firebase/config';
 
 // styles
 import './Home.css'
@@ -8,15 +8,39 @@ import './Home.css'
 import RecipeList from '../../components/RecipeList';
 
 const Home = () => {
-  const url = hostUrl();
+  const [data, setData] = useState(null);
+  const [isPending, setIsPending] = useState(false);
+  const [error, setError] = useState(null);
 
-  const {data: recipes, isPending, error} = useFetch(url + "/recipes");
+  useEffect(() => {
+    setIsPending(true);
+
+    projectFirestore.collection('recipes').get()
+      .then((snapshot) => {
+        if (snapshot.empty) {
+          setError('No recipes found!')
+          setIsPending(false);
+        } else {
+          let results = [];
+          snapshot.docs.forEach((doc) => {
+            results.push({id: doc.id, ...doc.data()});
+          })
+          setData(results);
+          setIsPending(false);
+        }
+      })
+      .catch(err => {
+        setError(err.message);
+        setIsPending(false);
+      });
+
+  }, [])
 
   return (
     <div className="home">
       {error && <p className="error">{error}</p>}
       {isPending && <p className="loading">Loading...</p>}
-      {recipes && <RecipeList recipes={recipes} />}
+      {data && <RecipeList recipes={data} />}
     </div>
   );
 }

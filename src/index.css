@@ -46,3 +46,8 @@ textarea {
   text-align: center;
   margin: 40px auto;
 }
+
+.dark .loading,
+.dark .error {
+  color: #efefef;
+}
