@@ -1,4 +1,4 @@
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 
 // page components
 import Navbar from './components/Navbar';
@@ -20,20 +20,13 @@ function App() {
       <BrowserRouter basename={process.env.PUBLIC_URL}>
         <Navbar />
         <ThemeSelector />
-        <Switch>
-          <Route exact path="/" >
-            <Home />
-          </Route>
-          <Route path="/create" >
-            <Create />
-          </Route>
-          <Route path="/search" >
-            <Search />
-          </Route>
-          <Route exact path="/recipes/:id" >
-            <Recipe />
-          </Route>
-        </Switch>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/create" element={<Create />} />
+          <Route path="/search" element={<Search /> } />
+          <Route path="/recipes/:id" element={<Recipe />} />
+          <Route path="*" element={<Navigate to="/" />} />
+        </Routes>
       </BrowserRouter>
     </div>
   );
